@@ -2,7 +2,7 @@
 # Automate the events of the IKEA TRÅDFRI open/close remote control.
 
 blueprint:
-    source_url: https://whutch.com/files/ha_blueprints/ikea_tradfri_remote_2button_open-close.yaml
+    source_url: https://github.com/whutch/ha-blueprints/blob/main/IKEA/TRADFRI/remote_2-button_open-close.yaml
     domain: automation
     name: ZHA - IKEA TRÅDFRI - Remote (2 Button) - Open/Close - Custom Actions
     description: >-
