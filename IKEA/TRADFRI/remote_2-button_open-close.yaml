@@ -1,57 +1,56 @@
 ---
 # Automate the events of the IKEA TRÅDFRI open/close remote control.
+# Derived from: https://github.com/niro1987/homeassistant-config/blob/main/blueprints/automation/niro1987/zha_ikea_tradfri_2button_remote_custom.yaml
 
 blueprint:
-    source_url: https://github.com/whutch/ha-blueprints/blob/main/IKEA/TRADFRI/remote_2-button_open-close.yaml
-    domain: automation
-    name: ZHA - IKEA TRÅDFRI - Remote (2 Button) - Open/Close - Custom Actions
-    description: >-
-        This automation simulates the use of the IKEA TRÅDFRI open/close remote
-        connected through ZHA.
+  source_url: https://github.com/whutch/ha-blueprints/blob/main/IKEA/TRADFRI/remote_2-button_open-close.yaml
+  domain: automation
+  name: ZHA - IKEA TRÅDFRI - Remote (2 Button) - Open/Close - Custom Actions
+  description: Automate the events of the IKEA TRÅDFRI open/close remote control.
 
-    input:
-        remote:
-            name: IKEA TRÅDFRI remote control
-            description: Select the remote control to use.
-            selector:
-                device:
-                integration: zha
-                manufacturer: IKEA of Sweden
-                model: TRADFRI open/close remote
-
+  input:
+    remote:
+      name: IKEA TRÅDFRI remote control
+      description: Select the remote control to use.
+      selector:
+        device:
+          integration: zha
+          manufacturer: IKEA of Sweden
+          model: TRADFRI open/close remote
     open_short:
-        name: Open Button
-        description: The action to perform when the Open Button is pressed.
-        selector:
-            action:
-        default: []
-
+      name: Open Button
+      description: The action to perform when the Open Button is pressed.
+      selector:
+        action:
+      default: []
     close_short:
-        name: Close Button
-        description: The action to perform when the Close Button is pressed.
-        selector:
-            action:
-        default: []
+      name: Close Button
+      description: The action to perform when the Close Button is pressed.
+      selector:
+        action:
+      default: []
+
 
 mode: restart
 max_exceeded: silent
 
+
 trigger:
-    - platform: event
-        event_type: zha_event
-        event_data:
-        device_id: !input remote
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: !input remote
 
 action:
-    - choose:
-        # Open Button
-        - conditions:
-            - condition: template
-                value_template: '{{ trigger.event.data.command == "up_open" }}'
-            sequence: !input open_short
-        # Close Button
-        - conditions:
-            - condition: template
-                value_template: '{{ trigger.event.data.command == "down_close" }}'
-            sequence: !input close_short
-        default: []
+  - choose:
+      # Open Button
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.event.data.command == "up_open" }}'
+        sequence: !input open_short
+      # Close Button
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.event.data.command == "down_close" }}'
+        sequence: !input close_short
+    default: []
