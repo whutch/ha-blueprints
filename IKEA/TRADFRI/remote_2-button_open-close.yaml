@@ -1,0 +1,57 @@
+---
+# Automate the events of the IKEA TRÅDFRI open/close remote control.
+
+blueprint:
+    source_url: https://whutch.com/files/ha_blueprints/ikea_tradfri_remote_2button_open-close.yaml
+    domain: automation
+    name: ZHA - IKEA TRÅDFRI - Remote (2 Button) - Open/Close - Custom Actions
+    description: >-
+        This automation simulates the use of the IKEA TRÅDFRI open/close remote
+        connected through ZHA.
+
+    input:
+        remote:
+            name: IKEA TRÅDFRI remote control
+            description: Select the remote control to use.
+            selector:
+                device:
+                integration: zha
+                manufacturer: IKEA of Sweden
+                model: TRADFRI open/close remote
+
+    open_short:
+        name: Open Button
+        description: The action to perform when the Open Button is pressed.
+        selector:
+            action:
+        default: []
+
+    close_short:
+        name: Close Button
+        description: The action to perform when the Close Button is pressed.
+        selector:
+            action:
+        default: []
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+    - platform: event
+        event_type: zha_event
+        event_data:
+        device_id: !input remote
+
+action:
+    - choose:
+        # Open Button
+        - conditions:
+            - condition: template
+                value_template: '{{ trigger.event.data.command == "up_open" }}'
+            sequence: !input open_short
+        # Close Button
+        - conditions:
+            - condition: template
+                value_template: '{{ trigger.event.data.command == "down_close" }}'
+            sequence: !input close_short
+        default: []
